@@ -31,5 +31,11 @@ pipeline {
                 sh 'aws s3 ls'
             }
         }
+        stage('aws_version_check') {
+            steps {
+                echo 'I am checking AWS version'
+                sh 'aws --version'
+            }
+        }
     }
 }
