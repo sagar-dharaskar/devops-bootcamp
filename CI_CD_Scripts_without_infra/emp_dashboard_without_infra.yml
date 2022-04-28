@@ -1,43 +1,36 @@
 pipeline {
     agent any
-
     stages {
         stage('Build') {
             steps {
-                echo 'I am in Build Phase'
+                echo 'Hello Build Phase'
+                build 'emp_dashboard_create_build'
+
             }
         }
-        
-        stage('Test') {
-            steps {
-                echo 'I am in Test Phase'
-            }
-        }
-        
         stage('Deploy') {
             steps {
-                echo 'I am in Deploy Phase'
-            }
-        }
-        stage('VersionCheck') {
-            steps {
-                echo 'I am in Version Phase'
-                sh 'aws s3 ls'
+                echo 'Hello Deploy Phase'
+                build 'emp_dashboard_app_deployment'
             }
         }
         stage('Monitoring') {
             steps {
-                build 'url-monitoring-job'
+                echo 'Hello Deploy Phase'
+                build 'emp_dashboard_monitoring'
             }
         }
-        
         stage('Slack Message') {
             steps {
                 slackSend channel: '#devops-alerts',
                 color: 'good',
                 message: "*${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER}\n More info at: ${env.BUILD_URL}"
-                }
+      }
+    }
+    }
+    post { 
+        always { 
+            cleanWs()
         }
-      
     }
 }
